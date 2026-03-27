@@ -3,31 +3,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        PUBLIC_SUPABASE_URL: ${PUBLIC_SUPABASE_URL}
-        PUBLIC_SUPABASE_ANON_KEY: ${PUBLIC_SUPABASE_ANON_KEY}
     ports:
-      - "4322:4321"
+      - "4322:4321"    # 4322 para test_server_2, 4321 para test_server
     environment:
       - HOST=0.0.0.0
       - PORT=4321
-      - NODE_ENV=production
-      - PUBLIC_SUPABASE_URL=${PUBLIC_SUPABASE_URL}
-      - PUBLIC_SUPABASE_ANON_KEY=${PUBLIC_SUPABASE_ANON_KEY}
-      - SUPABASE_ADMIN_KEY=${SUPABASE_ADMIN_KEY}
-      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
-      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - BREVO_API_KEY=${BREVO_API_KEY}
-      - BREVO_FROM_EMAIL=${BREVO_FROM_EMAIL}
-      - BREVO_FROM_NAME=${BREVO_FROM_NAME}
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
-      - CRON_SECRET=${CRON_SECRET}
-      - SITE_URL=${SITE_URL:-http://localhost:4322}
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4321/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
