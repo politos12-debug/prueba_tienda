@@ -1,0 +1,1416 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+---
+
+<PublicLayout title="Seguimiento del Pedido - Joyería Galiana">
+	<style is:global>
+		@keyframes spin {
+			to { transform: rotate(360deg); }
+		}
+
+		.seguimiento-hero {
+			background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+			padding: 60px 20px;
+			text-align: center;
+		}
+
+		.seguimiento-hero h1 {
+			font-family: 'Playfair Display', Georgia, serif;
+			font-size: 48px;
+			color: #1a1a1a;
+			margin: 0 0 20px 0;
+		}
+
+		.seguimiento-hero p {
+			font-size: 16px;
+			color: #666;
+			margin: 0;
+		}
+
+		.seguimiento-container {
+			max-width: 1000px;
+			margin: 0 auto;
+			padding: 40px 20px;
+		}
+
+		.search-section {
+			background: white;
+			border-radius: 12px;
+			padding: 40px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+			margin-bottom: 40px;
+		}
+
+		.search-form {
+			display: grid;
+			grid-template-columns: 1fr 1fr 120px;
+			gap: 20px;
+			align-items: end;
+		}
+
+		.form-group {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.form-group label {
+			font-weight: 600;
+			color: #333;
+			margin-bottom: 8px;
+			font-size: 14px;
+		}
+
+		.form-group input {
+			padding: 12px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			font-size: 14px;
+			font-family: inherit;
+		}
+
+		.form-group input:focus {
+			outline: none;
+			border-color: #d4af37;
+			box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+		}
+
+		.btn-buscar {
+			padding: 12px 24px;
+			background: linear-gradient(135deg, #8b1538 0%, #a81e4c 100%);
+			color: white;
+			border: none;
+			border-radius: 8px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.btn-buscar:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(139, 21, 56, 0.3);
+		}
+
+		.pedidos-list {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+		}
+
+		.pedido-card {
+			background: white;
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+			border: 1px solid rgba(0, 0, 0, 0.05);
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			padding: 20px;
+			gap: 20px;
+			cursor: pointer;
+		}
+
+		.pedido-card:hover {
+			box-shadow: 0 8px 24px rgba(212, 175, 55, 0.12);
+			border-color: rgba(212, 175, 55, 0.2);
+		}
+
+		.pedido-media {
+			width: 100px;
+			height: 100px;
+			border-radius: 12px;
+			overflow: hidden;
+			background: linear-gradient(135deg, #f8f6f0 0%, #efe9db 100%);
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.pedido-media img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+		}
+
+		.pedido-card:hover .pedido-media img {
+			transform: scale(1.1);
+		}
+
+		.pedido-body {
+			flex: 1;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 20px;
+		}
+
+		.pedido-status {
+			display: inline-block;
+			padding: 6px 12px;
+			border-radius: 20px;
+			font-size: 11px;
+			font-weight: 600;
+			text-transform: none;
+		}
+
+		.status-confirmado {
+			background: #d4edda;
+			color: #155724;
+		}
+
+		.status-pendiente {
+			background: #fff3cd;
+			color: #856404;
+		}
+
+		.status-enviado {
+			background: #cfe2ff;
+			color: #084298;
+		}
+
+		.status-entregado {
+			background: #d1ecf1;
+			color: #0c5460;
+		}
+
+		.status-cancelado {
+			background: #f8d7da;
+			color: #721c24;
+		}
+
+		.status-devolucion_proceso {
+			background: #fff3e0;
+			color: #e65100;
+		}
+
+		.status-devolucion_aceptada {
+			background: #e8f5e9;
+			color: #2e7d32;
+		}
+
+		.status-devolucion_rechazada,
+		.status-devolucion_cancelada {
+			background: #ffebee;
+			color: #c62828;
+		}
+
+		.pedido-precio {
+			font-size: 20px;
+			font-weight: 600;
+			color: #8b1538;
+			white-space: nowrap;
+		}
+
+		.btn-cancelar-tarjeta {
+			background: #f44336;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 6px;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.btn-cancelar-tarjeta:hover {
+			background: #d32f2f;
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+		}
+
+		.btn-cancelar-tarjeta:active {
+			transform: translateY(0);
+		}
+
+		.btn-devolucion-tarjeta {
+			background: #2196f3;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 6px;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.btn-devolucion-tarjeta:hover {
+			background: #1976d2;
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+		}
+
+		.btn-devolucion-tarjeta:active {
+			transform: translateY(0);
+		}
+
+		.loading-box {
+			text-align: center;
+			padding: 60px 20px;
+		}
+
+		.spinner {
+			width: 50px;
+			height: 50px;
+			border: 4px solid rgba(212, 175, 55, 0.3);
+			border-top-color: #d4af37;
+			border-radius: 50%;
+			animation: spin 0.8s linear infinite;
+			margin: 0 auto 20px;
+		}
+
+		.error-box {
+			background: white;
+			border-radius: 12px;
+			padding: 30px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+			border-left: 4px solid #e74c3c;
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.error-message {
+			color: #e74c3c;
+			margin: 0;
+		}
+
+		@media (max-width: 768px) {
+			.search-form {
+				grid-template-columns: 1fr;
+			}
+
+			.pedido-body {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+		}
+	</style>
+
+	<div class="seguimiento-hero">
+		<h1>Seguimiento del Pedido</h1>
+		<p>Consulta el estado y detalles de tu pedido</p>
+	</div>
+
+	<div class="seguimiento-container">
+		<div class="search-section">
+			<form id="searchForm" class="search-form">
+				<div class="form-group">
+					<label for="email">Email</label>
+					<input 
+						type="email" 
+						id="email" 
+						placeholder="tu@email.com" 
+						required
+					/>
+				</div>
+				<div class="form-group">
+					<label for="pedidoId">Número de Pedido</label>
+					<input 
+						type="number" 
+						id="pedidoId" 
+						placeholder="Ej: 146" 
+						required
+					/>
+				</div>
+				<button type="submit" class="btn-buscar">Buscar</button>
+			</form>
+		</div>
+
+		<div id="loadingContainer" style="display: none;" class="loading-box">
+			<div class="spinner"></div>
+			<p style="color: #999;">Buscando tu pedido...</p>
+		</div>
+
+		<div id="errorContainer" style="display: none;" class="error-box">
+			<p id="errorMessage" class="error-message"></p>
+		</div>
+
+		<div id="resultContainer" class="pedidos-list">
+			<!-- Se llena dinámicamente -->
+		</div>
+	</div>
+
+	<!-- Modal de Detalles del Pedido -->
+	<div id="modal-detalles" class="modal" style="display: none;">
+		<div class="modal-overlay" onclick="cerrarDetallesPedido()"></div>
+		<div class="modal-content">
+			<button class="modal-close" onclick="cerrarDetallesPedido()">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+			</button>
+			<div id="modal-body">
+				<!-- Contenido dinámico -->
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal de Confirmación de Cancelación -->
+	<div id="modal-confirm-cancelar" class="modal" style="display: none;">
+		<div class="modal-overlay" onclick="cerrarConfirmacionCancelacion()"></div>
+		<div class="modal-content">
+			<h2 style="margin-bottom: 16px; color: #333;">¿Cancelar Pedido?</h2>
+			<p style="color: #666; margin-bottom: 24px; line-height: 1.6;">
+				¿Estás seguro de que deseas cancelar este pedido? Se restaurará el stock de los productos y recibirás una confirmación por correo electrónico.
+			</p>
+			<div class="modal-actions">
+				<button class="modal-btn modal-btn-primary" onclick="cerrarConfirmacionCancelacion()">
+					Atrás
+				</button>
+				<button class="modal-btn modal-btn-danger" onclick="confirmarCancelacion()">
+					Sí, Cancelar Pedido
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal de Confirmación de Devolución -->
+	<div id="modal-confirm-devolucion" class="modal" style="display: none;">
+		<div class="modal-overlay" onclick="cerrarConfirmacionDevolucion()"></div>
+		<div class="modal-content" style="max-height: 80vh; overflow-y: auto;">
+			<h2 style="margin-bottom: 16px; color: #333;">Solicitar Devolución - Selecciona los Productos</h2>
+			<p style="color: #666; margin-bottom: 24px; line-height: 1.6;">
+				Selecciona qué productos deseas devolver. El reembolso será proporcional a los artículos seleccionados.
+			</p>
+			
+			<div id="items-seleccionar" style="margin-bottom: 24px; max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;">
+				<!-- Los items se cargarán dinámicamente aquí -->
+			</div>
+
+			<div style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+				<div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+					<span style="color: #666;">Subtotal a reembolsar:</span>
+					<span id="monto-reembolso" style="font-weight: bold; color: #333;">€0.00</span>
+				</div>
+			</div>
+			
+			<div style="margin-bottom: 24px;">
+				<label style="display: block; margin-bottom: 8px; color: #333; font-weight: 500;">
+					Motivo de la devolución *
+				</label>
+				<textarea 
+					id="motivo-devolucion"
+					placeholder="Por favor, describe el motivo de tu devolución (calidad, defecto, cambio de opinión, etc.)"
+					style="
+						width: 100%;
+						min-height: 120px;
+						padding: 12px;
+						border: 2px solid #e0e0e0;
+						border-radius: 8px;
+						font-family: Arial, sans-serif;
+						font-size: 14px;
+						resize: vertical;
+						box-sizing: border-box;
+						transition: border-color 0.3s ease;
+					"
+					onfocus="this.style.borderColor = '#d4af37';"
+					onblur="this.style.borderColor = '#e0e0e0';"
+				></textarea>
+				<small style="color: #999; display: block; margin-top: 4px;">
+					Mínimo 10 caracteres
+				</small>
+			</div>
+
+			<div id="error-motivo" style="display: none; background: #ffebee; color: #c62828; padding: 12px; border-radius: 4px; margin-bottom: 16px; font-size: 14px;"></div>
+			
+			<div class="modal-actions">
+				<button class="modal-btn modal-btn-primary" onclick="cerrarConfirmacionDevolucion()">
+					Atrás
+				</button>
+				<button class="modal-btn" style="background: #2196f3; color: white;" onclick="confirmarDevolucion()">
+					Enviar Solicitud
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<style is:inline>
+		.modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.modal-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.6);
+			cursor: pointer;
+		}
+
+		.modal-content {
+			position: relative;
+			background: white;
+			border-radius: 20px;
+			padding: 40px;
+			max-width: 600px;
+			width: 90%;
+			max-height: 90vh;
+			overflow-y: auto;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			z-index: 1001;
+			animation: slideUp 0.3s ease;
+		}
+
+		@keyframes slideUp {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.modal-close {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			width: 40px;
+			height: 40px;
+			border: none;
+			background: #f5f5f5;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #333;
+			transition: all 0.2s ease;
+		}
+
+		.modal-close:hover {
+			background: #e8e8e8;
+		}
+
+		.modal-header {
+			margin-bottom: 30px;
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		.modal-order-id {
+			font-size: 24px;
+			font-weight: 700;
+			color: #d4af37;
+		}
+
+		.modal-order-status {
+			display: inline-block;
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 13px;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+			text-transform: none !important;
+		}
+
+		.modal-order-status.confirmado {
+			background: rgba(34, 197, 94, 0.15);
+			color: #22c55e;
+		}
+
+		.modal-order-status.enviado {
+			background: rgba(59, 130, 246, 0.15);
+			color: #3b82f6;
+		}
+
+		.modal-order-status.entregado {
+			background: rgba(34, 197, 94, 0.15);
+			color: #22c55e;
+		}
+
+		.modal-order-status.cancelado {
+			background: rgba(239, 68, 68, 0.15);
+			color: #ef4444;
+		}
+
+		.modal-order-status.devolucion_proceso {
+			background: rgba(255, 193, 7, 0.15);
+			color: #ffc107;
+		}
+
+		.modal-order-status.devolucion_aceptada {
+			background: rgba(76, 175, 80, 0.15);
+			color: #4caf50;
+		}
+
+		.modal-order-status.devolucion_cancelada {
+			background: rgba(244, 67, 54, 0.15);
+			color: #f44336;
+		}
+
+		.modal-products {
+			margin-bottom: 30px;
+			border-top: 1px solid #f0f0f0;
+			border-bottom: 1px solid #f0f0f0;
+			padding: 20px 0;
+		}
+
+		.modal-product-item {
+			display: flex;
+			gap: 15px;
+			padding: 15px 0;
+			border-bottom: 1px solid #f5f5f5;
+			align-items: flex-start;
+		}
+
+		.modal-product-item:last-child {
+			border-bottom: none;
+		}
+
+		.modal-product-img {
+			width: 80px;
+			height: 80px;
+			border-radius: 8px;
+			object-fit: cover;
+			flex-shrink: 0;
+		}
+
+		.modal-product-details {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.modal-product-name {
+			font-weight: 600;
+			color: #333;
+			margin-bottom: 5px;
+			font-size: 15px;
+		}
+
+		.modal-product-qty {
+			font-size: 13px;
+			color: #999;
+			margin-bottom: 8px;
+		}
+
+		.modal-product-price {
+			font-weight: 700;
+			color: #d4af37;
+			font-size: 16px;
+		}
+
+		.modal-info-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 12px 0;
+			font-size: 14px;
+		}
+
+		.modal-info-label {
+			color: #999;
+		}
+
+		.modal-info-value {
+			font-weight: 500;
+			color: #333;
+		}
+
+		.modal-total {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 20px;
+			background: linear-gradient(135deg, #f8f6f0 0%, #efe9db 100%);
+			border-radius: 12px;
+			margin-bottom: 30px;
+		}
+
+		.modal-total-label {
+			font-size: 16px;
+			font-weight: 600;
+			color: #333;
+		}
+
+		.modal-total-amount {
+			font-size: 28px;
+			font-weight: 700;
+			color: #d4af37;
+		}
+
+		.modal-actions {
+			display: flex;
+			gap: 12px;
+		}
+
+		.modal-btn {
+			flex: 1;
+			padding: 12px 24px;
+			border: none;
+			border-radius: 8px;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.modal-btn-primary {
+			background: #d4af37;
+			color: white;
+		}
+
+		.modal-btn-primary:hover {
+			background: #c9a027;
+		}
+
+		.modal-btn-danger {
+			background: #ffebee;
+			color: #f44336;
+		}
+
+		.modal-btn-danger:hover {
+			background: #ffcdd2;
+		}
+
+		.modal-btn-disabled {
+			background: #e8e8e8;
+			color: #999;
+			cursor: not-allowed;
+		}
+
+		@media (max-width: 768px) {
+			.modal-content {
+				padding: 30px 20px;
+			}
+
+			.modal-actions {
+				flex-direction: column;
+			}
+
+			.modal-btn {
+				width: 100%;
+			}
+		}
+	</style>
+
+	<script is:inline>
+		const searchForm = document.getElementById('searchForm');
+		const resultContainer = document.getElementById('resultContainer');
+		const errorContainer = document.getElementById('errorContainer');
+		const errorMessage = document.getElementById('errorMessage');
+		const loadingContainer = document.getElementById('loadingContainer');
+
+		// Almacenar datos del pedido buscado
+		window.pedidoActualBusqueda = null;
+
+		async function obtenerImagenProducto(productId) {
+			try {
+				const response = await fetch(`/api/get-product-image?id=${productId}`);
+				if (response.ok) {
+					const data = await response.json();
+					return data.imagen || null;
+				}
+			} catch (e) {
+				console.log('[obtenerImagenProducto] Error:', e);
+			}
+			return null;
+		}
+
+		searchForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			const email = document.getElementById('email').value.trim();
+			const pedidoId = document.getElementById('pedidoId').value.trim();
+
+			resultContainer.innerHTML = '';
+			errorContainer.style.display = 'none';
+			loadingContainer.style.display = 'block';
+
+			try {
+				const response = await fetch('/api/search-order', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email, pedidoId: parseInt(pedidoId) })
+				});
+
+				const data = await response.json();
+
+				if (!response.ok) {
+					throw new Error(data.error || 'Error al buscar el pedido');
+				}
+
+				await mostrarPedido(data.pedido);
+			} catch (error) {
+				console.error('[búsqueda] Error:', error);
+				mostrarError(error.message);
+			} finally {
+				loadingContainer.style.display = 'none';
+			}
+		});
+
+		function mostrarError(mensaje) {
+			errorMessage.textContent = mensaje;
+			errorContainer.style.display = 'block';
+		}
+
+		async function mostrarPedido(pedido) {
+			let items = Array.isArray(pedido.items) ? pedido.items : 
+							(typeof pedido.items === 'string' ? JSON.parse(pedido.items) : []);
+
+			// Enriquecer items con imágenes
+			for (let i = 0; i < items.length; i++) {
+				let imagen = items[i].imagen || items[i].imagen_url || items[i].image || '';
+				if (!imagen && items[i].product_id) {
+					imagen = await obtenerImagenProducto(items[i].product_id) || '';
+				}
+				items[i] = { ...items[i], imagen: imagen };
+			}
+
+			const fecha = new Date(pedido.fecha_creacion).toLocaleDateString('es-ES', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			});
+			
+			// Determinar estado
+			const estadoRaw = pedido.estado ? pedido.estado.toLowerCase().replace(/\s+/g, '_') : 'pendiente';
+			let estadoFinal = estadoRaw;
+			let estadoTexto = '';
+			
+			if (pedido.devolucion && typeof pedido.devolucion === 'object') {
+				const estadoDev = pedido.devolucion.estado;
+				if (estadoDev === 'confirmada') {
+					estadoFinal = 'devolucion_aceptada';
+					estadoTexto = 'Devolución Aceptada';
+				} else if (estadoDev === 'rechazada') {
+					estadoFinal = 'devolucion_cancelada';
+					estadoTexto = 'Devolución Cancelada';
+				} else if (estadoDev === 'procesado') {
+					estadoFinal = 'devolucion_proceso';
+					estadoTexto = 'Devolución en Proceso';
+				}
+			} else {
+				const estadosMap = {
+					'confirmado': 'Confirmado',
+					'enviado': 'Enviado',
+					'entregado': 'Entregado',
+					'cancelado': 'Cancelado',
+					'devolucion_proceso': 'Devolución en Proceso',
+					'pendiente': 'Pendiente'
+				};
+				estadoTexto = estadosMap[estadoRaw] || (pedido.estado ? pedido.estado.charAt(0).toUpperCase() + pedido.estado.slice(1) : 'Pendiente');
+			}
+
+			// Verificar permisos de cancelación/devolución
+			const fechaCreacion = new Date(pedido.fecha_creacion);
+			const ahora = new Date();
+			const diferenciaMilisegundos = ahora - fechaCreacion;
+			const diferenciasHoras = diferenciaMilisegundos / (1000 * 60 * 60);
+			const diferenciaDias = diferenciaMilisegundos / (1000 * 60 * 60 * 24);
+			const puedeCancelar = estadoRaw === 'confirmado' && diferenciasHoras < 2;
+			const puedeSolicitarDevolucion = estadoRaw === 'entregado' && diferenciaDias < 15;
+
+			// Almacenar datos del pedido
+			window.pedidoActualBusqueda = {
+				id: pedido.id,
+				estado: estadoFinal,
+				estado_texto: estadoTexto,
+				fecha: fecha,
+				fecha_creacion: pedido.fecha_creacion,
+				items: items,
+				total: pedido.total,
+				subtotal: pedido.subtotal,
+				envio: pedido.envio,
+				email: pedido.email,
+				nombre: pedido.nombre,
+				devolucion: pedido.devolucion || null
+			};
+
+			// Obtener primera imagen del pedido
+			let imagenPrincipal = '';
+			if (items.length > 0) {
+				imagenPrincipal = items[0].imagen || '';
+			}
+
+			let botonCancelarHtml = '';
+			if (puedeCancelar) {
+				botonCancelarHtml = `
+					<button class="btn-cancelar-tarjeta" onclick="event.stopPropagation(); cancelarPedidoConfirmar(${pedido.id}, '${pedido.email}', '${pedido.nombre}')">
+						Cancelar Pedido
+					</button>
+				`;
+			}
+
+			let botonDevolucionHtml = '';
+			if (puedeSolicitarDevolucion) {
+				botonDevolucionHtml = `
+					<button class="btn-devolucion-tarjeta" onclick="event.stopPropagation(); solicitarDevolucionConfirmar(${pedido.id}, '${pedido.email}', '${pedido.nombre}')">
+						Solicitar Devolución
+					</button>
+				`;
+			}
+
+			// Codificar items JSON de forma segura para el atributo
+			const itemsJSON = JSON.stringify(items).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+
+			const html = `
+				<article class="pedido-card" data-pedido-id="${pedido.id}" data-items-json="${itemsJSON}" onclick="abrirDetallesPedido(${pedido.id})">
+					<div class="pedido-media">
+						${imagenPrincipal ? `<img src="${imagenPrincipal}" alt="Pedido #${pedido.id}" loading="lazy" />` : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 50px; height: 50px; color: #d4af37;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg></div>`}
+					</div>
+					<div class="pedido-body">
+						<div style="flex: 1;">
+							<div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 15px;">Pedido #${pedido.id}</div>
+							<div style="font-size: 13px; color: #999; margin-bottom: 8px;">${fecha}</div>
+							<span class="pedido-status status-${estadoFinal}" style="text-transform: none;">${estadoTexto}</span>
+							<div style="font-size: 13px; color: #999; margin-top: 8px;">
+								${items.length} producto${items.length !== 1 ? 's' : ''}
+							</div>
+						</div>
+						<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+							<div class="pedido-precio">
+								€${pedido.total.toFixed(2)}
+							</div>
+							${botonCancelarHtml}
+							${botonDevolucionHtml}
+						</div>
+					</div>
+				</article>
+			`;
+
+			resultContainer.innerHTML = html;
+		}
+
+		// Abrir modal con detalles del pedido
+		function abrirDetallesPedido(pedidoId) {
+			const pedidoData = window.pedidoActualBusqueda;
+
+			if (!pedidoData) {
+				console.error('Pedido no encontrado:', pedidoId);
+				return;
+			}
+
+			// Generar contenido del modal
+			let productosHtml = '';
+			pedidoData.items.forEach(item => {
+				const precio = (item.precio || 0).toFixed(2);
+				const cantidad = item.cantidad || 1;
+				let imagenProducto = item.imagen || item.imagen_url || item.image || '';
+				
+				productosHtml += `
+					<div class="modal-product-item">
+						${imagenProducto ? `<img src="${imagenProducto}" alt="${item.nombre}" class="modal-product-img" />` : ''}
+						<div class="modal-product-details" style="flex: 1;">
+							<div class="modal-product-name">${item.nombre}</div>
+							<div class="modal-product-qty">Cantidad: ${cantidad}</div>
+							${item.talla ? `<div class="modal-product-qty" style="font-size: 0.9rem; color: #666;">Talla: <strong>${item.talla}</strong></div>` : ''}
+							<div class="modal-product-price">€${precio}</div>
+						</div>
+					</div>
+				`;
+			});
+
+			// Verificar si se puede cancelar (confirmado y menos de 2 horas)
+			const fechaCreacion = new Date(pedidoData.fecha_creacion);
+			const ahora = new Date();
+			const diferenciaMilisegundos = ahora - fechaCreacion;
+			const diferenciasHoras = diferenciaMilisegundos / (1000 * 60 * 60);
+			const puedeCancelar = pedidoData.estado === 'confirmado' && diferenciasHoras < 2;
+
+			let botonesHtml = `
+				<div class="modal-actions">
+					<button class="modal-btn modal-btn-primary" onclick="cerrarDetallesPedido()">
+						Cerrar
+					</button>
+			`;
+
+			if (puedeCancelar) {
+				botonesHtml += `
+					<button class="modal-btn modal-btn-danger" onclick="cancelarPedidoConfirmar(${pedidoId}, '${pedidoData.email}', '${pedidoData.nombre}')">
+						Cancelar Pedido
+					</button>
+				`;
+			}
+
+			botonesHtml += `
+				</div>
+			`;
+
+			// Agregar información de devolución si existe
+			let devolucionHtml = '';
+			if (pedidoData.devolucion) {
+				const dev = pedidoData.devolucion;
+				
+				// Mostrar items devueltos si existen
+				let itemsDevueltosHtml = '';
+				if (dev.items_devueltos && dev.items_devueltos.length > 0) {
+					itemsDevueltosHtml = '<div style="margin-top: 12px;"><strong style="color: #333; font-size: 13px;">Productos devueltos:</strong>';
+					dev.items_devueltos.forEach(item => {
+						itemsDevueltosHtml += `
+							<div style="background: #fff; padding: 10px; margin-top: 6px; border-left: 3px solid #d4af37; border-radius: 4px; font-size: 13px;">
+								<div style="color: #333; font-weight: 500;">${item.nombre} ${item.talla ? `(Talla: ${item.talla})` : ''}</div>
+								<div style="color: #666; font-size: 12px;">
+									${item.cantidad}x @ €${parseFloat(item.precio).toFixed(2)} = €${parseFloat(item.subtotal || item.cantidad * item.precio).toFixed(2)}
+								</div>
+							</div>
+						`;
+					});
+					itemsDevueltosHtml += '</div>';
+				}
+				
+				const montoReembolso = dev.monto_reembolso ? parseFloat(dev.monto_reembolso).toFixed(2) : '0.00';
+				
+				devolucionHtml = `
+					<div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #d4af37;">
+						<div style="font-weight: 600; color: #333; margin-bottom: 10px;">Información de Devolución</div>
+						<div class="modal-info-row">
+							<span class="modal-info-label">Estado de Devolución</span>
+							<span class="modal-info-value">${dev.estado === 'confirmada' ? 'Aceptada' : dev.estado === 'rechazada' ? 'Cancelada' : 'En Proceso'}</span>
+						</div>
+						<div class="modal-info-row">
+							<span class="modal-info-label">Motivo Solicitud</span>
+							<span class="modal-info-value">${dev.motivo_solicitud}</span>
+						</div>
+						${itemsDevueltosHtml}
+						<div class="modal-info-row" style="margin-top: 12px;">
+							<span class="modal-info-label">Importe a Reembolsar</span>
+							<span class="modal-info-value" style="font-weight: 700; color: #28a745;">€${montoReembolso}</span>
+						</div>
+						${dev.estado === 'rechazada' ? `
+							<div class="modal-info-row">
+								<span class="modal-info-label">Motivo de Cancelación</span>
+								<span class="modal-info-value">${dev.motivo_rechazo}</span>
+							</div>
+						` : ''}
+					</div>
+				`;
+			}
+
+			const modalBody = document.getElementById('modal-body');
+			modalBody.innerHTML = `
+				<div class="modal-header">
+					<div>
+						<div class="modal-order-id">Pedido #${pedidoData.id}</div>
+						<span class="modal-order-status ${pedidoData.estado}" style="text-transform: none;">${pedidoData.estado_texto}</span>
+					</div>
+				</div>
+
+				<div class="modal-info-row">
+					<span class="modal-info-label">Fecha de Pedido</span>
+					<span class="modal-info-value">${pedidoData.fecha}</span>
+				</div>
+
+				<div class="modal-info-row">
+					<span class="modal-info-label">Cliente</span>
+					<span class="modal-info-value">${pedidoData.nombre}</span>
+				</div>
+
+				<div class="modal-products">
+					${productosHtml}
+				</div>
+
+				<div class="modal-info-row">
+					<span class="modal-info-label">Subtotal</span>
+					<span class="modal-info-value">€${(pedidoData.subtotal || 0).toFixed(2)}</span>
+				</div>
+
+				<div class="modal-info-row">
+					<span class="modal-info-label">Envío</span>
+					<span class="modal-info-value">€${(pedidoData.envio || 0).toFixed(2)}</span>
+				</div>
+
+				<div class="modal-total">
+					<span class="modal-total-label">Total</span>
+					<span class="modal-total-amount">€${pedidoData.total.toFixed(2)}</span>
+				</div>
+
+				${devolucionHtml}
+
+				<div style="display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap;">
+					<button onclick="descargarFactura(${pedidoData.id})" style="flex: 1; min-width: 150px; padding: 12px; background: #d4af37; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+							<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="13" x2="12" y2="19"></line><polyline points="9 16 12 13 15 16"></polyline>
+						</svg>
+						Factura Compra
+					</button>
+					${(pedidoData.devolucion && pedidoData.devolucion.estado === 'confirmada') || pedidoData.estado === 'cancelado' ? `
+						<button onclick="descargarFacturaDevolucio(${pedidoData.id})" style="flex: 1; min-width: 150px; padding: 12px; background: #2196f3; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+								<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="13" x2="12" y2="19"></line><polyline points="9 16 12 13 15 16"></polyline>
+							</svg>
+							Factura Devolución
+						</button>
+					` : ''}
+					${botonesHtml}
+				</div>
+			`;
+
+			// Mostrar modal
+			document.getElementById('modal-detalles').style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		}
+
+		// Cerrar modal de detalles
+		function cerrarDetallesPedido() {
+			document.getElementById('modal-detalles').style.display = 'none';
+			document.body.style.overflow = 'auto';
+		}
+
+		// Cancelar pedido con confirmación
+		function cancelarPedidoConfirmar(pedidoId, email, nombre) {
+			const modalConfirm = document.getElementById('modal-confirm-cancelar');
+			if (!modalConfirm) return;
+			
+			modalConfirm.dataset.pedidoId = pedidoId;
+			modalConfirm.dataset.email = email;
+			modalConfirm.dataset.nombre = nombre;
+			
+			modalConfirm.style.display = 'flex';
+		}
+
+		// Confirmar cancelación
+		function confirmarCancelacion() {
+			const modalConfirm = document.getElementById('modal-confirm-cancelar');
+			const pedidoId = modalConfirm.dataset.pedidoId;
+			const email = modalConfirm.dataset.email;
+			const nombre = modalConfirm.dataset.nombre;
+			
+			modalConfirm.style.display = 'none';
+			cancelarPedido(pedidoId, email, nombre);
+		}
+
+		// Cerrar modal de confirmación cancelación
+		function cerrarConfirmacionCancelacion() {
+			const modalConfirm = document.getElementById('modal-confirm-cancelar');
+			modalConfirm.style.display = 'none';
+		}
+
+		// Cancelar pedido
+		async function cancelarPedido(pedidoId, email, nombre) {
+			try {
+				const response = await fetch('/api/cancel-order', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						pedidoId: parseInt(pedidoId),
+						email: email,
+						nombre: nombre
+					})
+				});
+
+				const data = await response.json();
+
+				if (data.success) {
+					mostrarModalExito('Pedido cancelado exitosamente. Te hemos enviado una confirmación por email.');
+				} else {
+					mostrarModalError('Error: ' + (data.message || 'No se pudo cancelar el pedido'));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				mostrarModalError('Error al cancelar el pedido. Intenta más tarde.');
+			}
+		}
+
+		// Solicitar devolución con confirmación y selección de items
+		function solicitarDevolucionConfirmar(pedidoId, email, nombre) {
+			const modalConfirm = document.getElementById('modal-confirm-devolucion');
+			if (!modalConfirm) return;
+			
+			modalConfirm.dataset.pedidoId = pedidoId;
+			modalConfirm.dataset.email = email;
+			modalConfirm.dataset.nombre = nombre;
+
+			// Cargar los items del pedido desde el DOM
+			const pedidoCard = document.querySelector(`[data-pedido-id="${pedidoId}"]`);
+			if (!pedidoCard) return;
+
+			let itemsHTML = pedidoCard.getAttribute('data-items-json');
+			if (!itemsHTML) return;
+			
+			// Decodificar HTML entities
+			itemsHTML = itemsHTML.replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+			
+			try {
+				const items = JSON.parse(itemsHTML);
+				
+				// Construir HTML para seleccionar items
+				const seleccionarDiv = document.getElementById('items-seleccionar');
+				seleccionarDiv.innerHTML = items.map((item, index) => `
+					<div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px;">
+						<input 
+							type="checkbox" 
+							id="item-${index}" 
+							value="${index}"
+							checked
+							onchange="actalizarMontoReembolso('${pedidoId}')"
+							style="width: 20px; height: 20px; cursor: pointer;"
+						/>
+						<div style="flex: 1;">
+							<label for="item-${index}" style="cursor: pointer; color: #333; font-weight: 500;">
+								${item.nombre} ${item.talla ? `(Talla: ${item.talla})` : ''}
+							</label>
+							<div style="color: #999; font-size: 12px;">
+								${item.cantidad}x @ €${item.precio.toFixed(2)} = €${(item.cantidad * item.precio).toFixed(2)}
+							</div>
+						</div>
+					</div>
+				`).join('');
+
+				// Guardar items en dataset
+				modalConfirm.dataset.itemsJSON = itemsHTML;
+				
+				// Limpiar motivo y errores
+				document.getElementById('motivo-devolucion').value = '';
+				document.getElementById('error-motivo').style.display = 'none';
+				
+				// Calcular monto inicial
+				actalizarMontoReembolso(pedidoId);
+			} catch (e) {
+				console.error('[seguimiento] Error parsing items:', e);
+			}
+			
+			modalConfirm.style.display = 'flex';
+		}
+
+		function actalizarMontoReembolso(pedidoId) {
+			const modalConfirm = document.getElementById('modal-confirm-devolucion');
+			const itemsJSON = modalConfirm.dataset.itemsJSON;
+			
+			try {
+				const items = JSON.parse(itemsJSON);
+				let montoTotal = 0;
+				
+				items.forEach((item, index) => {
+					const checkbox = document.getElementById(`item-${index}`);
+					if (checkbox && checkbox.checked) {
+						montoTotal += item.cantidad * item.precio;
+					}
+				});
+				
+				const montoDiv = document.getElementById('monto-reembolso');
+				if (montoDiv) {
+					montoDiv.textContent = '€' + montoTotal.toFixed(2);
+				}
+			} catch (e) {
+				console.error('[seguimiento] Error updating monto:', e);
+			}
+		}
+		
+		function obtenerItemsSeleccionados() {
+			const modalConfirm = document.getElementById('modal-confirm-devolucion');
+			const itemsJSON = modalConfirm.dataset.itemsJSON;
+			
+			try {
+				const items = JSON.parse(itemsJSON);
+				const itemsSeleccionados = [];
+				
+				items.forEach((item, index) => {
+					const checkbox = document.getElementById(`item-${index}`);
+					if (checkbox && checkbox.checked) {
+						itemsSeleccionados.push(item);
+					}
+				});
+				
+				return itemsSeleccionados;
+			} catch (e) {
+				console.error('[seguimiento] Error getting selected items:', e);
+				return [];
+			}
+		}
+
+		// Confirmar devolución
+		function confirmarDevolucion() {
+			const modalConfirm = document.getElementById('modal-confirm-devolucion');
+			const motivoInput = document.getElementById('motivo-devolucion');
+			const motivo = motivoInput.value.trim();
+			const errorDiv = document.getElementById('error-motivo');
+			
+			const itemsSeleccionados = obtenerItemsSeleccionados();
+			
+			if (itemsSeleccionados.length === 0) {
+				errorDiv.style.display = 'block';
+				errorDiv.textContent = 'Por favor, selecciona al menos un producto para devolver';
+				return;
+			}
+			
+			if (!motivo) {
+				errorDiv.style.display = 'block';
+				errorDiv.textContent = 'Por favor, ingresa un motivo para la devolución';
+				return;
+			}
+			
+			if (motivo.length < 10) {
+				errorDiv.style.display = 'block';
+				errorDiv.textContent = 'El motivo debe tener al menos 10 caracteres';
+				return;
+			}
+			
+			const pedidoId = modalConfirm.dataset.pedidoId;
+			const email = modalConfirm.dataset.email;
+			const nombre = modalConfirm.dataset.nombre;
+			
+			errorDiv.style.display = 'none';
+			modalConfirm.style.display = 'none';
+			procesarDevolucion(pedidoId, email, nombre, motivo, itemsSeleccionados);
+		}
+
+		// Cerrar modal de confirmación de devolución
+		function cerrarConfirmacionDevolucion() {
+			const modalConfirm = document.getElementById('modal-confirm-devolucion');
+			modalConfirm.style.display = 'none';
+		}
+
+		// Procesar devolución
+		async function procesarDevolucion(pedidoId, email, nombre, motivo, itemsDevueltos) {
+			try {
+				const response = await fetch('/api/request-return', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						pedidoId: parseInt(pedidoId),
+						email: email,
+						nombre: nombre,
+						motivo: motivo,
+						itemsDevueltos: itemsDevueltos
+					})
+				});
+
+				const data = await response.json();
+
+				if (data.success) {
+					const montoTotal = itemsDevueltos.reduce((sum, item) => sum + (item.cantidad * item.precio), 0);
+					const mensaje = `Tu solicitud de devolución ha sido registrada exitosamente. 
+						Te hemos enviado un email confirmando que tu devolución está en proceso. 
+						Monto a reembolsar: €${montoTotal.toFixed(2)} 
+						El equipo de Joyería Galiana se pondrá en contacto contigo dentro de 24 horas.`;
+					mostrarModalExito(mensaje);
+				} else {
+					mostrarModalError('Error: ' + (data.message || 'No se pudo procesar la devolución'));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				mostrarModalError('Error al procesar la devolución. Intenta más tarde.');
+			}
+		}
+
+		// Descargar factura de compra
+		async function descargarFactura(pedidoId) {
+			try {
+				const response = await fetch(`/api/download-invoice?id=${pedidoId}`);
+				
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(`Error ${response.status}: ${errorData.error}`);
+				}
+
+				const blob = await response.blob();
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `factura-pedido-${pedidoId}.pdf`;
+				document.body.appendChild(a);
+				a.click();
+				window.URL.revokeObjectURL(url);
+				document.body.removeChild(a);
+			} catch (error) {
+				console.error('Error descargando factura:', error);
+				mostrarModalError('Error al descargar la factura. Por favor, intenta de nuevo.');
+			}
+		}
+
+		// Descargar factura de devolución
+		async function descargarFacturaDevolucio(pedidoId) {
+			try {
+				const response = await fetch(`/api/download-invoice?id=${pedidoId}&type=devolucio`);
+				
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(`Error ${response.status}: ${errorData.error}`);
+				}
+
+				const blob = await response.blob();
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `factura-devolucion-pedido-${pedidoId}.pdf`;
+				document.body.appendChild(a);
+				a.click();
+				window.URL.revokeObjectURL(url);
+				document.body.removeChild(a);
+			} catch (error) {
+				console.error('Error descargando factura de devolución:', error);
+				mostrarModalError('Error al descargar la factura de devolución. Por favor, intenta de nuevo.');
+			}
+		}
+
+		// Modal de éxito
+		function mostrarModalExito(mensaje) {
+			const html = `
+				<div id="modal-exito" class="modal" style="display: flex;">
+					<div class="modal-overlay" onclick="cerrarModalExito()"></div>
+					<div class="modal-content" style="text-align: center;">
+						<div style="font-size: 64px; margin-bottom: 20px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 64px; height: 64px; color: #4caf50;">
+								<polyline points="20 6 9 17 4 12"></polyline>
+							</svg>
+						</div>
+						<h2 style="color: #4caf50; margin-bottom: 16px;">¡Éxito!</h2>
+						<p style="color: #666; margin-bottom: 24px;">${mensaje}</p>
+						<button class="modal-btn modal-btn-primary" onclick="cerrarModalExito(); window.location.reload();">
+							Aceptar
+						</button>
+					</div>
+				</div>
+			`;
+			document.body.insertAdjacentHTML('beforeend', html);
+			document.getElementById('modal-exito').style.display = 'flex';
+		}
+
+		function cerrarModalExito() {
+			const modal = document.getElementById('modal-exito');
+			if (modal) modal.remove();
+		}
+
+		// Modal de error
+		function mostrarModalError(mensaje) {
+			const html = `
+				<div id="modal-error" class="modal" style="display: flex;">
+					<div class="modal-overlay" onclick="cerrarModalError()"></div>
+					<div class="modal-content" style="text-align: center;">
+						<div style="font-size: 64px; margin-bottom: 20px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 64px; height: 64px; color: #f44336;">
+								<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+							</svg>
+						</div>
+						<h2 style="color: #f44336; margin-bottom: 16px;">Error</h2>
+						<p style="color: #666; margin-bottom: 24px;">${mensaje}</p>
+						<button class="modal-btn modal-btn-primary" onclick="cerrarModalError();">
+							Aceptar
+						</button>
+					</div>
+				</div>
+			`;
+			document.body.insertAdjacentHTML('beforeend', html);
+			document.getElementById('modal-error').style.display = 'flex';
+		}
+
+		function cerrarModalError() {
+			const modal = document.getElementById('modal-error');
+			if (modal) modal.remove();
+		}
+	</script>
+</PublicLayout>

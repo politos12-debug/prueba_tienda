@@ -1,0 +1,371 @@
+---
+import PublicLayout from "../../layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Relojería - Joyería Galiana">
+  <!-- Modal de Login y Registro -->
+  <div id="login-modal" class="modal" style="display: none;">
+    <div class="modal-content auth-modal">
+      <span class="close" onclick="window.closeLoginModal()">&times;</span>
+
+      <!-- Tabs de navegación -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-tab="login"
+          >Iniciar Sesión</button
+        >
+        <button type="button" class="auth-tab" data-tab="register"
+          >Registrarse</button
+        >
+      </div>
+
+      <!-- Formulario de Login -->
+      <form id="login-form" class="auth-form active">
+        <h2>Iniciar Sesión</h2>
+        <div class="form-group">
+          <label for="login-email">Email:</label>
+          <input type="email" id="login-email" required />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña:</label>
+          <input type="password" id="login-password" required />
+        </div>
+        <div class="forgot-password-link">
+          <a href="#" onclick="abrirModalRecuperacion(event)"
+            >¿Olvidaste tu contraseña?</a
+          >
+        </div>
+        <button type="submit" class="btn-principal">Iniciar Sesión</button>
+      </form>
+
+      <!-- Formulario de Registro -->
+      <form id="register-form" class="auth-form">
+        <h2>Registrarse</h2>
+        <div class="form-group">
+          <label for="register-nombre">Nombre:</label>
+          <input type="text" id="register-nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="register-apellido">Apellidos:</label>
+          <input type="text" id="register-apellido" />
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email:</label>
+          <input type="email" id="register-email" required />
+        </div>
+        <div class="form-group">
+          <label for="register-telefono">Teléfono:</label>
+          <input type="tel" id="register-telefono" />
+        </div>
+        <div class="form-group">
+          <label for="register-direccion">Dirección:</label>
+          <input type="text" id="register-direccion" />
+        </div>
+        <div class="form-group">
+          <label for="register-ciudad">Ciudad:</label>
+          <input type="text" id="register-ciudad" />
+        </div>
+        <div class="form-group">
+          <label for="register-codigo-postal">Código Postal:</label>
+          <input type="text" id="register-codigo-postal" />
+        </div>
+        <div class="form-group">
+          <label for="register-password">Contraseña:</label>
+          <input type="password" id="register-password" required />
+        </div>
+        <div class="form-group">
+          <label for="register-confirm-password">Confirmar Contraseña:</label>
+          <input type="password" id="register-confirm-password" required />
+        </div>
+        <button type="submit" class="btn-principal">Registrarse</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Recuperar Contraseña (FUERA del login-modal) -->
+  <div id="recuperacion-modal" class="modal" style="display: none;">
+    <div class="modal-content auth-modal" style="max-width: 420px;">
+      <button
+        class="btn-close-modal"
+        onclick="cerrarModalRecuperacion()"
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div style="text-align: center; margin-bottom: 30px;">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#8B1538"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="margin: 0 auto; display: block; margin-bottom: 15px;"
+        >
+          <path d="M12 1v6m0 6v6"></path>
+          <rect x="5" y="9" width="14" height="12" rx="2" ry="2"></rect>
+          <path d="M8 14h8"></path>
+        </svg>
+        <h2 style="color: #8B1538; margin: 0; font-size: 24px;">
+          Recuperar Contraseña
+        </h2>
+        <p style="color: #666; margin: 10px 0 0 0; font-size: 14px;">
+          Ingresa tu email para recibir un enlace de recuperación
+        </p>
+      </div>
+
+      <form id="form-recuperacion">
+        <div class="form-group">
+          <label for="recuperacion-email" style="font-weight: 600; color: #333;"
+            >Correo Electrónico</label
+          >
+          <input
+            type="email"
+            id="recuperacion-email"
+            required
+            placeholder="tu@email.com"
+            style="width: 100%; padding: 12px; border: 2px solid #d4af37; border-radius: 6px; font-size: 14px;"
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn-principal"
+          id="btn-recuperacion-submit"
+          style="width: 100%; margin-top: 20px;">Enviar Enlace</button
+        >
+        <div
+          id="recuperacion-message"
+          class="message"
+          style="margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center;"
+        >
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button
+            type="button"
+            class="btn-volver-recuperacion"
+            onclick="cerrarModalRecuperacion()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: inline; margin-right: 6px; vertical-align: middle;"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Volver
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sección de Relojería -->
+  <section class="productos-page">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Navegación">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator">&rsaquo;</span>
+        <span class="breadcrumb-current">Relojería</span>
+      </nav>
+
+      <h2>Relojería</h2>
+
+      <!-- Toolbar -->
+      <div class="joyeria-toolbar">
+        <div class="toolbar-left">
+          <span class="resultados-count" id="resultados-count"></span>
+        </div>
+        <div class="toolbar-buttons">
+          <button type="button" class="btn-toolbar btn-limpiar-toolbar" id="btn-limpiar-toolbar" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Limpiar filtros
+          </button>
+          <button type="button" class="btn-toolbar" id="btn-abrir-filtros">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            Filtrar
+            <span class="filtros-count-inline" id="filtros-count-inline" style="display:none;">0</span>
+          </button>
+          <button type="button" class="btn-toolbar btn-toolbar-secondary" id="btn-abrir-orden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg>
+            Ordenar
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Filtros -->
+      <div class="modal-filtros-overlay" id="modal-filtros-overlay">
+        <div class="modal-filtros" id="modal-filtros">
+          <div class="modal-filtros-header">
+            <h3>Filtros</h3>
+            <button type="button" class="modal-filtros-close" id="btn-cerrar-filtros">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div class="modal-filtros-body">
+            <!-- Filtro Marca -->
+            <div class="filtro-seccion" id="filtro-marca-seccion">
+              <h4 class="filtro-seccion-titulo">Marca</h4>
+              <div class="filtro-subcategorias-btns" id="filtro-marca"></div>
+            </div>
+            <!-- Filtro Precio -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">Precio</h4>
+              <div class="precio-rango-display">
+                <span id="precio-min-display">0 €</span>
+                <span class="precio-separador">—</span>
+                <span id="precio-max-display">5.000 €</span>
+              </div>
+              <div class="dual-range-container">
+                <div class="range-track" id="range-track"></div>
+                <input type="range" id="precio-min-range" min="0" max="5000" value="0" step="10" class="range-input range-min">
+                <input type="range" id="precio-max-range" min="0" max="5000" value="5000" step="10" class="range-input range-max">
+              </div>
+            </div>
+            <!-- Filtro Ofertas -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Ofertas
+              </h4>
+              <label class="toggle-ofertas">
+                <input type="checkbox" id="filtro-solo-ofertas">
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Solo productos en oferta</span>
+              </label>
+            </div>
+          </div>
+          <div class="modal-filtros-footer">
+            <button type="button" class="btn-limpiar-filtros" id="btn-limpiar-filtros">Limpiar todo</button>
+            <button type="button" class="btn-aplicar-filtros" id="btn-aplicar-filtros">
+              Aplicar filtros
+              <span class="filtros-badge" id="filtros-badge" style="display:none;">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Orden -->
+      <div class="modal-filtros-overlay" id="modal-orden-overlay">
+        <div class="modal-filtros modal-orden" id="modal-orden">
+          <div class="modal-filtros-header">
+            <h3>Ordenar por</h3>
+            <button type="button" class="modal-filtros-close" id="btn-cerrar-orden">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div class="modal-filtros-body">
+            <div class="orden-opciones">
+              <label class="orden-opcion active" data-orden="relevancia"><input type="radio" name="ordenamiento" value="relevancia" checked><span class="orden-radio"></span><span class="orden-texto">Relevancia</span></label>
+              <label class="orden-opcion" data-orden="a-z"><input type="radio" name="ordenamiento" value="a-z"><span class="orden-radio"></span><span class="orden-texto">Nombre: A - Z</span></label>
+              <label class="orden-opcion" data-orden="z-a"><input type="radio" name="ordenamiento" value="z-a"><span class="orden-radio"></span><span class="orden-texto">Nombre: Z - A</span></label>
+              <label class="orden-opcion" data-orden="precio-menor"><input type="radio" name="ordenamiento" value="precio-menor"><span class="orden-radio"></span><span class="orden-texto">Precio: Menor a Mayor</span></label>
+              <label class="orden-opcion" data-orden="precio-mayor"><input type="radio" name="ordenamiento" value="precio-mayor"><span class="orden-radio"></span><span class="orden-texto">Precio: Mayor a Menor</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Productos -->
+      <div class="productos-grid" id="productos-grid"></div>
+      <div id="sin-productos" style="display:none;text-align:center;padding:60px 20px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:16px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <p style="color:#888;font-size:16px;margin:0 0 8px;">No se encontraron relojes con los filtros seleccionados</p>
+        <p style="color:#aaa;font-size:14px;margin:0;">Prueba a cambiar los filtros o limpiarlos</p>
+      </div>
+    </div>
+  </section>
+
+  <link rel="stylesheet" href="/css/categorias.css?v=5" />
+  <script src="/js/relojeria.js?v=4" is:inline></script>
+
+  <script is:inline>
+    // Funciones para modal de recuperación
+    window.abrirModalRecuperacion = function (e) {
+      e.preventDefault();
+      document.getElementById("login-modal").style.display = "none";
+      document.getElementById("recuperacion-modal").style.display = "flex";
+    };
+
+    window.cerrarModalRecuperacion = function () {
+      document.getElementById("recuperacion-modal").style.display = "none";
+      document.getElementById("login-modal").style.display = "flex";
+      const form = document.getElementById("form-recuperacion");
+      if (form) form.reset();
+      const msg = document.getElementById("recuperacion-message");
+      if (msg) msg.textContent = "";
+    };
+
+    // Manejar envío de recuperación
+    const formRecuperacion = document.getElementById("form-recuperacion");
+
+    if (formRecuperacion) {
+      formRecuperacion.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document
+          .getElementById("recuperacion-email")
+          .value.trim();
+        const messageDiv = document.getElementById("recuperacion-message");
+        const btnSubmit = document.getElementById("btn-recuperacion-submit");
+
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Enviando...";
+
+        try {
+          const response = await fetch("/api/request-password-reset", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Error al solicitar reset");
+          }
+
+          messageDiv.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 8px; vertical-align: middle; color: #28a745;"><polyline points="20 6 9 17 4 12"></polyline></svg>Enlace enviado a tu correo. Revisa tu bandeja de entrada.';
+          messageDiv.className = "message success";
+          formRecuperacion.reset();
+
+          setTimeout(() => {
+            window.cerrarModalRecuperacion();
+          }, 2000);
+        } catch (err) {
+          messageDiv.textContent = err.message || "Error desconocido";
+          messageDiv.className = "message error";
+        } finally {
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = "Enviar Enlace";
+        }
+      });
+    }
+  </script>
+</PublicLayout>

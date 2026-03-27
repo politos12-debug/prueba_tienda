@@ -1,0 +1,5 @@
+---
+export const prerender = false;
+// SIEMPRE redirigir a login para verificación
+// Nunca servir contenido directamente desde /admin
+return Astro.redirect('/admin-login.html?from=admin');

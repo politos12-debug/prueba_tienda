@@ -1,0 +1,27 @@
+---
+import '../styles/global.css';
+import GlobalFavicon from '../components/GlobalFavicon.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = 'Galiana - Joyería de Minimalismo Sofisticado' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<GlobalFavicon />
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon.png?v=5" />
+		<title>{title} | Galiana</title>
+	</head>
+	<body>
+		<main>
+			<slot />
+		</main>
+	</body>
+</html>

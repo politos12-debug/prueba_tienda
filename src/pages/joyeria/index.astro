@@ -1,0 +1,874 @@
+---
+import PublicLayout from "../../layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Joyería - Joyería Galiana">
+  <!-- Modal de Login y Registro -->
+  <div id="login-modal" class="modal" style="display: none;">
+    <div class="modal-content auth-modal">
+      <span class="close" onclick="window.closeLoginModal()">&times;</span>
+
+      <!-- Tabs de navegación -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-tab="login"
+          >Iniciar Sesión</button
+        >
+        <button type="button" class="auth-tab" data-tab="register"
+          >Registrarse</button
+        >
+      </div>
+
+      <!-- Formulario de Login -->
+      <form id="login-form" class="auth-form active">
+        <h2>Iniciar Sesión</h2>
+        <div class="form-group">
+          <label for="login-email">Email:</label>
+          <input type="email" id="login-email" required />
+        </div>
+        <div class="form-group">
+          <label for="login-password">Contraseña:</label>
+          <input type="password" id="login-password" required />
+        </div>
+        <div class="forgot-password-link">
+          <a href="#" onclick="abrirModalRecuperacion(event)"
+            >¿Olvidaste tu contraseña?</a
+          >
+        </div>
+        <button type="submit" class="btn-principal">Iniciar Sesión</button>
+      </form>
+
+      <!-- Formulario de Registro -->
+      <form id="register-form" class="auth-form">
+        <h2>Registrarse</h2>
+        <div class="form-group">
+          <label for="register-nombre">Nombre:</label>
+          <input type="text" id="register-nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="register-apellido">Apellidos:</label>
+          <input type="text" id="register-apellido" />
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email:</label>
+          <input type="email" id="register-email" required />
+        </div>
+        <div class="form-group">
+          <label for="register-telefono">Teléfono:</label>
+          <input type="tel" id="register-telefono" />
+        </div>
+        <div class="form-group">
+          <label for="register-direccion">Dirección:</label>
+          <input type="text" id="register-direccion" />
+        </div>
+        <div class="form-group">
+          <label for="register-ciudad">Ciudad:</label>
+          <input type="text" id="register-ciudad" />
+        </div>
+        <div class="form-group">
+          <label for="register-codigo-postal">Código Postal:</label>
+          <input type="text" id="register-codigo-postal" />
+        </div>
+        <div class="form-group">
+          <label for="register-password">Contraseña:</label>
+          <input type="password" id="register-password" required />
+        </div>
+        <div class="form-group">
+          <label for="register-confirm-password">Confirmar Contraseña:</label>
+          <input type="password" id="register-confirm-password" required />
+        </div>
+        <button type="submit" class="btn-principal">Registrarse</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Recuperar Contraseña (FUERA del login-modal) -->
+  <div id="recuperacion-modal" class="modal" style="display: none;">
+    <div class="modal-content auth-modal" style="max-width: 420px;">
+      <button
+        class="btn-close-modal"
+        onclick="cerrarModalRecuperacion()"
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div style="text-align: center; margin-bottom: 30px;">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#8B1538"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="margin: 0 auto; display: block; margin-bottom: 15px;"
+        >
+          <path d="M12 1v6m0 6v6"></path>
+          <rect x="5" y="9" width="14" height="12" rx="2" ry="2"></rect>
+          <path d="M8 14h8"></path>
+        </svg>
+        <h2 style="color: #8B1538; margin: 0; font-size: 24px;">
+          Recuperar Contraseña
+        </h2>
+        <p style="color: #666; margin: 10px 0 0 0; font-size: 14px;">
+          Ingresa tu email para recibir un enlace de recuperación
+        </p>
+      </div>
+
+      <form id="form-recuperacion">
+        <div class="form-group">
+          <label for="recuperacion-email" style="font-weight: 600; color: #333;"
+            >Correo Electrónico</label
+          >
+          <input
+            type="email"
+            id="recuperacion-email"
+            required
+            placeholder="tu@email.com"
+            style="width: 100%; padding: 12px; border: 2px solid #d4af37; border-radius: 6px; font-size: 14px;"
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn-principal"
+          id="btn-recuperacion-submit"
+          style="width: 100%; margin-top: 20px;">Enviar Enlace</button
+        >
+        <div
+          id="recuperacion-message"
+          class="message"
+          style="margin-top: 15px; padding: 12px; border-radius: 6px; text-align: center;"
+        >
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <button
+            type="button"
+            class="btn-volver-recuperacion"
+            onclick="cerrarModalRecuperacion()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: inline; margin-right: 6px; vertical-align: middle;"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Volver
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sección de Joyería -->
+  <section class="productos-page">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Navegación">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator">&rsaquo;</span>
+        <span class="breadcrumb-current">Joyería</span>
+      </nav>
+
+      <h2>Joyería</h2>
+
+      <!-- Contador de resultados + Botones -->
+      <div class="joyeria-toolbar">
+        <div class="toolbar-left">
+          <span class="resultados-count" id="resultados-count"></span>
+        </div>
+        <div class="toolbar-buttons">
+          <button type="button" class="btn-toolbar btn-limpiar-toolbar" id="btn-limpiar-toolbar" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            Limpiar filtros
+          </button>
+          <button type="button" class="btn-toolbar" id="btn-abrir-filtros">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filtrar
+            <span class="filtros-count-inline" id="filtros-count-inline" style="display:none;">0</span>
+          </button>
+          <button type="button" class="btn-toolbar btn-toolbar-secondary" id="btn-abrir-orden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="21" x2="4" y2="14"></line>
+              <line x1="4" y1="10" x2="4" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="3"></line>
+              <line x1="20" y1="21" x2="20" y2="16"></line>
+              <line x1="20" y1="12" x2="20" y2="3"></line>
+            </svg>
+            Ordenar
+          </button>
+        </div>
+      </div>
+
+      <!-- ========== MODAL FILTROS ========== -->
+      <div class="modal-filtros-overlay" id="modal-filtros-overlay">
+        <div class="modal-filtros" id="modal-filtros">
+          <div class="modal-filtros-header">
+            <h3>Filtros</h3>
+            <button type="button" class="modal-filtros-close" id="btn-cerrar-filtros">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="modal-filtros-body">
+            <!-- Rango de Precio -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">
+                Precio
+              </h4>
+              <div class="precio-rango-display">
+                <span id="precio-min-display">0 €</span>
+                <span class="precio-separador">—</span>
+                <span id="precio-max-display">5.000 €</span>
+              </div>
+              <div class="dual-range-container">
+                <div class="range-track" id="range-track"></div>
+                <input type="range" id="precio-min-range" min="0" max="5000" value="0" step="10" class="range-input range-min">
+                <input type="range" id="precio-max-range" min="0" max="5000" value="5000" step="10" class="range-input range-max">
+              </div>
+            </div>
+
+            <!-- Ofertas -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Ofertas
+              </h4>
+              <label class="toggle-ofertas">
+                <input type="checkbox" id="filtro-solo-ofertas">
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Solo productos en oferta</span>
+              </label>
+            </div>
+
+            <!-- Categorías -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Categorías
+              </h4>
+              <div class="categorias-checkboxes" id="categorias-checkboxes">
+                <!-- Se rellenan dinámicamente -->
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-filtros-footer">
+            <button type="button" class="btn-limpiar-filtros" id="btn-limpiar-filtros">Limpiar todo</button>
+            <button type="button" class="btn-aplicar-filtros" id="btn-aplicar-filtros">
+              Aplicar filtros
+              <span class="filtros-badge" id="filtros-badge" style="display:none;">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== MODAL ORDENAR ========== -->
+      <div class="modal-filtros-overlay" id="modal-orden-overlay">
+        <div class="modal-filtros modal-orden" id="modal-orden">
+          <div class="modal-filtros-header">
+            <h3>Ordenar por</h3>
+            <button type="button" class="modal-filtros-close" id="btn-cerrar-orden">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="modal-filtros-body">
+            <div class="orden-opciones">
+              <label class="orden-opcion active" data-orden="relevancia">
+                <input type="radio" name="ordenamiento" value="relevancia" checked>
+                <span class="orden-radio"></span>
+                <span class="orden-texto">Relevancia</span>
+              </label>
+              <label class="orden-opcion" data-orden="a-z">
+                <input type="radio" name="ordenamiento" value="a-z">
+                <span class="orden-radio"></span>
+                <span class="orden-texto">Nombre: A - Z</span>
+              </label>
+              <label class="orden-opcion" data-orden="z-a">
+                <input type="radio" name="ordenamiento" value="z-a">
+                <span class="orden-radio"></span>
+                <span class="orden-texto">Nombre: Z - A</span>
+              </label>
+              <label class="orden-opcion" data-orden="precio-menor">
+                <input type="radio" name="ordenamiento" value="precio-menor">
+                <span class="orden-radio"></span>
+                <span class="orden-texto">Precio: Menor a Mayor</span>
+              </label>
+              <label class="orden-opcion" data-orden="precio-mayor">
+                <input type="radio" name="ordenamiento" value="precio-mayor">
+                <span class="orden-radio"></span>
+                <span class="orden-texto">Precio: Mayor a Menor</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        /* ===== TOOLBAR ===== */
+        .joyeria-toolbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          margin: 28px 0 8px;
+          flex-wrap: wrap;
+        }
+        .toolbar-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+          flex: 1;
+          min-width: 0;
+        }
+        .resultados-count {
+          font-size: 13px;
+          color: #888;
+          letter-spacing: 0.3px;
+          white-space: nowrap;
+        }
+        .btn-limpiar-toolbar {
+          border-color: #e0c8c8 !important;
+          color: #a05050 !important;
+          background: #fff8f8 !important;
+          font-size: 12.5px !important;
+        }
+        .btn-limpiar-toolbar:hover {
+          background: #c00 !important;
+          border-color: #c00 !important;
+          color: #fff !important;
+        }
+        .filtros-count-inline {
+          background: #d4af37;
+          color: #fff;
+          font-size: 10.5px;
+          font-weight: 700;
+          min-width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 2px;
+        }
+        .toolbar-buttons {
+          display: flex;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+        .btn-toolbar {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          padding: 10px 20px;
+          border: 1.5px solid #d4af37;
+          background: linear-gradient(145deg, #ffffff, #fdfbf5);
+          color: #8B6914;
+          font-weight: 600;
+          font-size: 13px;
+          letter-spacing: 0.5px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+          font-family: inherit;
+        }
+        .btn-toolbar:hover {
+          background: linear-gradient(145deg, #d4af37, #c9a232);
+          color: #fff;
+          box-shadow: 0 4px 16px rgba(212,175,55,0.25);
+          transform: translateY(-1px);
+        }
+        .btn-toolbar:hover svg { stroke: #fff; }
+        .btn-toolbar-secondary {
+          border-color: #d5cfc0;
+          color: #665e4e;
+          background: #fff;
+        }
+        .btn-toolbar-secondary:hover {
+          background: linear-gradient(145deg, #5a4a3a, #4a3a2a);
+          border-color: #5a4a3a;
+          color: #fff;
+        }
+
+        /* ===== MODAL OVERLAY ===== */
+        .modal-filtros-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0,0,0,0.4);
+          backdrop-filter: blur(4px);
+          z-index: 9999;
+          display: none;
+          justify-content: flex-end;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        .modal-filtros-overlay.visible {
+          display: flex;
+          opacity: 1;
+        }
+
+        /* ===== MODAL PANEL ===== */
+        .modal-filtros {
+          width: 400px;
+          max-width: 90vw;
+          height: 100%;
+          background: #fff;
+          display: flex;
+          flex-direction: column;
+          box-shadow: -8px 0 40px rgba(0,0,0,0.12);
+          transform: translateX(100%);
+          transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .modal-filtros-overlay.visible .modal-filtros {
+          transform: translateX(0);
+        }
+        .modal-filtros-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 24px 28px 20px;
+          border-bottom: 1px solid #f0ebe0;
+        }
+        .modal-filtros-header h3 {
+          font-size: 18px;
+          font-weight: 700;
+          color: #2a2420;
+          margin: 0;
+          letter-spacing: -0.3px;
+        }
+        .modal-filtros-close {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: #999;
+          padding: 4px;
+          border-radius: 6px;
+          transition: all 0.2s;
+        }
+        .modal-filtros-close:hover {
+          color: #333;
+          background: #f5f0e6;
+        }
+        .modal-filtros-body {
+          flex: 1;
+          overflow-y: auto;
+          padding: 24px 28px;
+        }
+        .modal-filtros-footer {
+          padding: 18px 28px;
+          border-top: 1px solid #f0ebe0;
+          display: flex;
+          gap: 10px;
+          justify-content: space-between;
+          background: #fdfbf7;
+        }
+
+        /* ===== SECCIONES DEL FILTRO ===== */
+        .filtro-seccion {
+          margin-bottom: 32px;
+        }
+        .filtro-seccion:last-child { margin-bottom: 0; }
+        .filtro-seccion-titulo {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+          color: #5a4a3a;
+          margin: 0 0 16px;
+        }
+        .filtro-seccion-titulo svg {
+          color: #d4af37;
+          opacity: 0.8;
+        }
+
+        /* ===== RANGO DE PRECIO ===== */
+        .precio-rango-display {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          font-size: 15px;
+          font-weight: 600;
+          color: #333;
+        }
+        .precio-separador {
+          color: #ccc;
+          font-weight: 300;
+        }
+        .dual-range-container {
+          position: relative;
+          height: 36px;
+          margin-top: 4px;
+        }
+        .range-track {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: #e8e0d0;
+          border-radius: 4px;
+          transform: translateY(-50%);
+        }
+        .range-track::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          height: 100%;
+          background: linear-gradient(90deg, #d4af37, #c9a232);
+          border-radius: 4px;
+        }
+        .range-input {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 100%;
+          height: 4px;
+          background: none;
+          pointer-events: none;
+          -webkit-appearance: none;
+          appearance: none;
+          margin: 0;
+        }
+        .range-input::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          pointer-events: auto;
+          width: 22px;
+          height: 22px;
+          background: #fff;
+          border: 2.5px solid #d4af37;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+          transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .range-input::-webkit-slider-thumb:hover {
+          box-shadow: 0 2px 12px rgba(212,175,55,0.35);
+          transform: scale(1.1);
+        }
+        .range-input::-moz-range-thumb {
+          pointer-events: auto;
+          width: 22px;
+          height: 22px;
+          background: #fff;
+          border: 2.5px solid #d4af37;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        /* ===== TOGGLE OFERTAS ===== */
+        .toggle-ofertas {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          padding: 12px 16px;
+          border-radius: 10px;
+          border: 1.5px solid #eee8da;
+          transition: all 0.25s;
+          background: #fdfbf7;
+        }
+        .toggle-ofertas:hover {
+          border-color: #d4af37;
+          background: #faf6eb;
+        }
+        .toggle-ofertas input { display: none; }
+        .toggle-slider {
+          width: 42px;
+          height: 24px;
+          background: #ddd5c4;
+          border-radius: 24px;
+          position: relative;
+          transition: background 0.3s;
+          flex-shrink: 0;
+        }
+        .toggle-slider::after {
+          content: '';
+          position: absolute;
+          top: 3px;
+          left: 3px;
+          width: 18px;
+          height: 18px;
+          background: #fff;
+          border-radius: 50%;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+          transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+        .toggle-ofertas input:checked + .toggle-slider {
+          background: linear-gradient(135deg, #d4af37, #c9a232);
+        }
+        .toggle-ofertas input:checked + .toggle-slider::after {
+          transform: translateX(18px);
+        }
+        .toggle-label {
+          font-size: 14px;
+          color: #444;
+          font-weight: 500;
+        }
+
+        /* ===== CHECKBOXES CATEGORÍAS (estilos inyectados via JS) ===== */
+
+        /* ===== BOTONES FOOTER ===== */
+        .btn-limpiar-filtros {
+          padding: 12px 20px;
+          border: 1.5px solid #ddd5c4;
+          background: #fff;
+          color: #888;
+          font-weight: 600;
+          font-size: 13px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-family: inherit;
+        }
+        .btn-limpiar-filtros:hover {
+          border-color: #c00;
+          color: #c00;
+          background: #fff5f5;
+        }
+        .btn-aplicar-filtros {
+          padding: 12px 28px;
+          border: none;
+          background: linear-gradient(145deg, #8B1538, #a01a42);
+          color: #fff;
+          font-weight: 700;
+          font-size: 13.5px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.25s;
+          font-family: inherit;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          letter-spacing: 0.3px;
+        }
+        .btn-aplicar-filtros:hover {
+          background: linear-gradient(145deg, #a01a42, #b8204e);
+          box-shadow: 0 4px 16px rgba(139,21,56,0.3);
+          transform: translateY(-1px);
+        }
+        .filtros-badge {
+          background: #d4af37;
+          color: #fff;
+          font-size: 11px;
+          font-weight: 700;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* ===== MODAL ORDEN ===== */
+        .modal-orden {
+          width: 340px;
+        }
+        .orden-opciones {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+        .orden-opcion {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 16px;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.2s;
+          border: 1.5px solid transparent;
+        }
+        .orden-opcion:hover {
+          background: #faf6eb;
+        }
+        .orden-opcion input { display: none; }
+        .orden-radio {
+          width: 20px;
+          height: 20px;
+          border: 2px solid #d5cfc0;
+          border-radius: 50%;
+          position: relative;
+          transition: all 0.25s;
+          flex-shrink: 0;
+        }
+        .orden-radio::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%,-50%) scale(0);
+          width: 10px;
+          height: 10px;
+          background: linear-gradient(135deg, #d4af37, #c9a232);
+          border-radius: 50%;
+          transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+        .orden-opcion.active .orden-radio {
+          border-color: #d4af37;
+        }
+        .orden-opcion.active .orden-radio::after {
+          transform: translate(-50%,-50%) scale(1);
+        }
+        .orden-opcion.active {
+          background: #faf6eb;
+          border-color: rgba(212,175,55,0.2);
+        }
+        .orden-texto {
+          font-size: 14px;
+          font-weight: 500;
+          color: #444;
+        }
+        .orden-opcion.active .orden-texto {
+          color: #8B6914;
+          font-weight: 600;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+          .joyeria-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+          .toolbar-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .toolbar-buttons .btn-toolbar {
+            flex: 1 1 auto;
+            justify-content: center;
+            padding: 12px 14px;
+            min-width: 0;
+          }
+          .btn-limpiar-toolbar {
+            flex: 0 1 auto !important;
+            white-space: nowrap;
+          }
+          .modal-filtros {
+            width: 100%;
+            max-width: 100vw;
+          }
+          .modal-filtros-body { padding: 20px; }
+          .modal-filtros-header { padding: 20px; }
+          .modal-filtros-footer { padding: 16px 20px; }
+        }
+      </style>
+
+      <!-- Grid de Productos -->
+      <div class="productos-grid" style="margin: 40px 0;">
+        <!-- Los productos se cargarán aquí dinámicamente -->
+      </div>
+    </div>
+  </section>
+
+  <script src="/js/joyeria.js?v=7" is:inline></script>
+
+  <script is:inline>
+    // Funciones para modal de recuperación
+    window.abrirModalRecuperacion = function (e) {
+      e.preventDefault();
+      document.getElementById("login-modal").style.display = "none";
+      document.getElementById("recuperacion-modal").style.display = "flex";
+    };
+
+    window.cerrarModalRecuperacion = function () {
+      document.getElementById("recuperacion-modal").style.display = "none";
+      document.getElementById("login-modal").style.display = "flex";
+      const form = document.getElementById("form-recuperacion");
+      if (form) form.reset();
+      const msg = document.getElementById("recuperacion-message");
+      if (msg) msg.textContent = "";
+    };
+
+    // Manejar envío de recuperación
+    const formRecuperacion = document.getElementById("form-recuperacion");
+
+    if (formRecuperacion) {
+      formRecuperacion.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document
+          .getElementById("recuperacion-email")
+          .value.trim();
+        const messageDiv = document.getElementById("recuperacion-message");
+        const btnSubmit = document.getElementById("btn-recuperacion-submit");
+
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Enviando...";
+
+        try {
+          const response = await fetch("/api/request-password-reset", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Error al solicitar reset");
+          }
+
+          messageDiv.innerHTML =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; margin-right: 8px; vertical-align: middle; color: #28a745;"><polyline points="20 6 9 17 4 12"></polyline></svg>Enlace enviado a tu correo. Revisa tu bandeja de entrada.';
+          messageDiv.className = "message success";
+          formRecuperacion.reset();
+
+          setTimeout(() => {
+            window.cerrarModalRecuperacion();
+          }, 2000);
+        } catch (err) {
+          messageDiv.textContent = err.message || "Error desconocido";
+          messageDiv.className = "message error";
+        } finally {
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = "Enviar Enlace";
+        }
+      });
+    }
+  </script>
+</PublicLayout>

@@ -1,0 +1,249 @@
+---
+
+---
+
+<!-- Header y Navegación -->
+<header class="header">
+	<div class="container">
+		<button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+		<div class="logo">
+			<a href="/"
+				><img
+					src="/images/logo.png"
+					alt="Joyería Galiana"
+					class="logo-img"
+					width="180"
+					height="60"
+				/></a
+			>
+		</div>
+		<nav class="nav" id="nav-menu">
+			<div class="nav-top-bar">
+				<button
+					class="nav-close-btn"
+					id="nav-close-btn"
+					onclick="closeMobileMenu()"
+					aria-label="Cerrar menú"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="22"
+						height="22"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.5"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
+				<div class="nav-logo">
+					<img
+						src="/images/logo.png"
+						alt="Joyería Galiana"
+						width="150"
+						height="50"
+					/>
+				</div>
+				<div class="nav-top-spacer"></div>
+			</div>
+			<div
+				id="nav-user-email"
+				class="nav-user-email"
+				style="display: none; padding: 10px 20px; text-align: center; color: #d4af37; font-size: 0.9rem; border-bottom: 1px solid rgba(212, 175, 55, 0.2); width: 100%; box-sizing: border-box; margin: 0;"
+			>
+			</div>
+			<ul>
+				<li>
+					<a href="/#inicio" onclick="closeMobileMenu()">Inicio</a>
+				</li>
+				<li class="nav-joyeria-wrapper" id="nav-joyeria-link">
+					<a href="/joyeria" onclick="closeMobileMenu()"
+						>Joyería</a
+					>
+					<button class="mobile-joyeria-chevron" id="mobile-joyeria-chevron" aria-label="Expandir categorías joyería">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+					</button>
+					<!-- Mega Menú Joyería (Desktop) -->
+					<div class="mega-menu" id="mega-menu-joyeria">
+						<div class="mega-menu-loading">Cargando categorías...</div>
+					</div>
+					<!-- Categorías acordeón Joyería (Móvil) -->
+					<div class="mobile-categorias-container" id="mobile-categorias-joyeria"></div>
+				</li>
+				<li class="nav-relojeria-wrapper" id="nav-relojeria-link">
+					<a href="/relojeria" onclick="closeMobileMenu()"
+						>Relojería</a
+					>
+					<button class="mobile-relojeria-chevron" id="mobile-relojeria-chevron" aria-label="Expandir categorías relojería">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+					</button>
+					<!-- Mega Menú Relojería (Desktop) -->
+					<div class="mega-menu" id="mega-menu-relojeria">
+						<div class="mega-menu-loading">Próximamente...</div>
+					</div>
+					<!-- Categorías acordeón Relojería (Móvil) -->
+					<div class="mobile-categorias-container" id="mobile-categorias-relojeria"></div>
+				</li>
+
+				<li>
+					<a href="/#sobre-nosotros" onclick="closeMobileMenu()"
+						>Sobre Nosotros</a
+					>
+				</li>
+				<li>
+					<a href="/#contacto" onclick="closeMobileMenu()">Contacto</a
+					>
+				</li>
+				<li id="mobile-favoritos-link" class="mobile-only-nav-item">
+					<a href="/favoritos" onclick="closeMobileMenu()">Favoritos</a>
+				</li>
+				<li id="mobile-iniciar-sesion" class="mobile-only-nav-item">
+					<a href="/cuenta" onclick="closeMobileMenu()">Iniciar Sesión</a>
+				</li>
+				</ul>
+		</nav>
+		<div class="header-right">
+			<div id="auth-button">
+				<a href="/cuenta" id="auth-link" class="auth-icon" title="Iniciar Sesión">
+					<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+				</a>
+			</div>
+			<button class="search-icon" id="search-icon-btn" onclick="abrirBuscador()" aria-label="Buscar">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="17"
+					height="17"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<circle cx="11" cy="11" r="8"></circle>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+				</svg>
+				<span class="search-icon-text">Buscar</span>
+			</button>
+			<a href="/favoritos" class="favoritos-icon" id="favoritos-header-icon" title="Mis favoritos">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="17"
+					height="17"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+				</svg>
+			</a>
+			<div
+				class="cart-icon"
+				onclick="handleCartClick()"
+				style="cursor: pointer;"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="17"
+					height="17"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<circle cx="9" cy="21" r="1"></circle>
+					<circle cx="20" cy="21" r="1"></circle>
+					<path
+						d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+					></path>
+				</svg>
+				<span id="cart-count">0</span>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Función para cerrar el menú
+		window.closeMobileMenu = function () {
+			const hamburger = document.getElementById("hamburger");
+			const nav = document.getElementById("nav-menu");
+			const overlay = document.getElementById("nav-overlay");
+
+			if (hamburger) hamburger.classList.remove("active");
+			if (nav) nav.classList.remove("active");
+			if (overlay) overlay.classList.remove("active");
+			document.body.style.overflow = "";
+		};
+
+		// Función para toggle del menú
+		window.toggleMobileMenu = function () {
+			const hamburger = document.getElementById("hamburger");
+			const nav = document.getElementById("nav-menu");
+			let overlay = document.getElementById("nav-overlay");
+
+			if (!hamburger || !nav) return;
+
+			hamburger.classList.toggle("active");
+			nav.classList.toggle("active");
+
+			// Congelar/descongelar página
+			if (nav.classList.contains("active")) {
+				document.body.style.overflow = "hidden";
+			} else {
+				document.body.style.overflow = "";
+			}
+
+			if (!overlay) {
+				overlay = document.createElement("div");
+				overlay.id = "nav-overlay";
+				overlay.className = "nav-overlay";
+				document.body.appendChild(overlay);
+				setupOverlay(overlay);
+			}
+
+			overlay.classList.toggle("active");
+		};
+
+		function setupOverlay(overlay) {
+			// Solo cerrar si el click es exactamente en el overlay, no en elementos dentro
+			overlay.addEventListener(
+				"click",
+				function (e) {
+					if (e.target === overlay) {
+						console.log("Overlay clicked - closing menu");
+						window.closeMobileMenu();
+					}
+				},
+				false,
+			);
+		}
+
+		// Ejecutar al cargar
+		document.addEventListener("DOMContentLoaded", function () {
+			console.log("Header DOMContentLoaded");
+
+			// Crear overlay
+			let overlay = document.getElementById("nav-overlay");
+			if (!overlay) {
+				overlay = document.createElement("div");
+				overlay.id = "nav-overlay";
+				overlay.className = "nav-overlay";
+				document.body.appendChild(overlay);
+				setupOverlay(overlay);
+			}
+		});
+	</script>
+</header>

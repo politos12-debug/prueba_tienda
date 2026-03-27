@@ -1,0 +1,133 @@
+---
+export const prerender = false;
+import PublicLayout from "../../layouts/PublicLayout.astro";
+
+const { marca } = Astro.params;
+const marcaDisplay = marca
+  ? decodeURIComponent(marca).replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+  : 'Marca';
+---
+
+<PublicLayout title={`${marcaDisplay} - Relojería - Joyería Galiana`}>
+  <link rel="stylesheet" href="/css/categorias.css?v=5" slot="head" />
+
+  <main class="categorias-container">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Navegación">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator">&rsaquo;</span>
+        <a href="/relojeria">Relojería</a>
+        <span class="breadcrumb-separator">&rsaquo;</span>
+        <span class="breadcrumb-current" id="breadcrumb-marca"></span>
+      </nav>
+
+      <div class="categoria-header">
+        <h1 id="marca-titulo"></h1>
+        <p id="marca-desc">Explora nuestra colección de relojes</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="joyeria-toolbar">
+        <div class="toolbar-left">
+          <span class="resultados-count" id="resultados-count"></span>
+        </div>
+        <div class="toolbar-buttons">
+          <button type="button" class="btn-toolbar btn-limpiar-toolbar" id="btn-limpiar-toolbar" style="display:none;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Limpiar filtros
+          </button>
+          <button type="button" class="btn-toolbar" id="btn-abrir-filtros">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            Filtrar
+            <span class="filtros-count-inline" id="filtros-count-inline" style="display:none;">0</span>
+          </button>
+          <button type="button" class="btn-toolbar btn-toolbar-secondary" id="btn-abrir-orden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg>
+            Ordenar
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Filtros -->
+      <div class="modal-filtros-overlay" id="modal-filtros-overlay">
+        <div class="modal-filtros" id="modal-filtros">
+          <div class="modal-filtros-header">
+            <h3>Filtros</h3>
+            <button type="button" class="modal-filtros-close" id="btn-cerrar-filtros">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div class="modal-filtros-body">
+            <!-- Filtro Precio -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">Precio</h4>
+              <div class="precio-rango-display">
+                <span id="precio-min-display">0 €</span>
+                <span class="precio-separador">—</span>
+                <span id="precio-max-display">5.000 €</span>
+              </div>
+              <div class="dual-range-container">
+                <div class="range-track" id="range-track"></div>
+                <input type="range" id="precio-min-range" min="0" max="5000" value="0" step="10" class="range-input range-min">
+                <input type="range" id="precio-max-range" min="0" max="5000" value="5000" step="10" class="range-input range-max">
+              </div>
+            </div>
+            <!-- Filtro Ofertas -->
+            <div class="filtro-seccion">
+              <h4 class="filtro-seccion-titulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                Ofertas
+              </h4>
+              <label class="toggle-ofertas">
+                <input type="checkbox" id="filtro-solo-ofertas">
+                <span class="toggle-slider"></span>
+                <span class="toggle-label">Solo productos en oferta</span>
+              </label>
+            </div>
+          </div>
+          <div class="modal-filtros-footer">
+            <button type="button" class="btn-limpiar-filtros" id="btn-limpiar-filtros">Limpiar todo</button>
+            <button type="button" class="btn-aplicar-filtros" id="btn-aplicar-filtros">
+              Aplicar filtros
+              <span class="filtros-badge" id="filtros-badge" style="display:none;">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Orden -->
+      <div class="modal-filtros-overlay" id="modal-orden-overlay">
+        <div class="modal-filtros modal-orden" id="modal-orden">
+          <div class="modal-filtros-header">
+            <h3>Ordenar por</h3>
+            <button type="button" class="modal-filtros-close" id="btn-cerrar-orden">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div class="modal-filtros-body">
+            <div class="orden-opciones">
+              <label class="orden-opcion active" data-orden="relevancia"><input type="radio" name="ordenamiento" value="relevancia" checked><span class="orden-radio"></span><span class="orden-texto">Relevancia</span></label>
+              <label class="orden-opcion" data-orden="a-z"><input type="radio" name="ordenamiento" value="a-z"><span class="orden-radio"></span><span class="orden-texto">Nombre: A - Z</span></label>
+              <label class="orden-opcion" data-orden="z-a"><input type="radio" name="ordenamiento" value="z-a"><span class="orden-radio"></span><span class="orden-texto">Nombre: Z - A</span></label>
+              <label class="orden-opcion" data-orden="precio-menor"><input type="radio" name="ordenamiento" value="precio-menor"><span class="orden-radio"></span><span class="orden-texto">Precio: Menor a Mayor</span></label>
+              <label class="orden-opcion" data-orden="precio-mayor"><input type="radio" name="ordenamiento" value="precio-mayor"><span class="orden-radio"></span><span class="orden-texto">Precio: Mayor a Menor</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Productos -->
+      <div class="productos-grid" id="productos-grid"></div>
+      <div id="sin-productos" style="display:none;text-align:center;padding:60px 20px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:16px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <p style="color:#888;font-size:16px;margin:0 0 8px;">No se encontraron relojes de esta marca</p>
+        <p style="color:#aaa;font-size:14px;margin:0;">Prueba a cambiar los filtros o <a href="/relojeria" style="color:#d4af37;">ver todos los relojes</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script is:inline define:vars={{ marca }}>
+    window.__marcaSlug = marca;
+  </script>
+  <script src="/js/marca-relojeria.js?v=4" is:inline></script>
+</PublicLayout>

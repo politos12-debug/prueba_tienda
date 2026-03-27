@@ -1,0 +1,218 @@
+---
+import PublicLayout from "../layouts/PublicLayout.astro";
+---
+
+<PublicLayout title="Crear Cuenta - Joyería Galiana">
+  <link rel="stylesheet" href="/css/cuenta.css?v=3" />
+
+  <div class="cuenta-page">
+    <!-- Decoración de fondo -->
+    <div class="cuenta-bg-pattern"></div>
+    
+    <div class="cuenta-container">
+      <!-- Panel izquierdo: Branding -->
+      <div class="cuenta-branding">
+        <div class="branding-content">
+          <div class="branding-logo">
+            <img src="/images/logo.png" alt="Joyería Galiana" />
+          </div>
+          <h1 class="branding-title">Únete a<br/>Joyería Galiana</h1>
+          <p class="branding-text">Crea tu cuenta y disfruta de una experiencia de compra exclusiva con beneficios únicos.</p>
+          <div class="branding-features">
+            <div class="feature-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <span>Guarda tus favoritos</span>
+            </div>
+            <div class="feature-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Seguimiento de pedidos</span>
+            </div>
+            <div class="feature-item">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Compras 100% seguras</span>
+            </div>
+          </div>
+        </div>
+        <div class="branding-ornament"></div>
+      </div>
+
+      <!-- Panel derecho: Formulario Registro -->
+      <div class="cuenta-forms">
+        <form id="register-form" class="cuenta-form active">
+          <div class="form-header">
+            <h2>Crea tu cuenta</h2>
+            <p>Únete y disfruta de beneficios exclusivos</p>
+          </div>
+
+          <div class="campos-fila">
+            <div class="campo">
+              <label for="register-nombre">Nombre *</label>
+              <div class="campo-input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="register-nombre" placeholder="Tu nombre" required />
+              </div>
+            </div>
+            <div class="campo">
+              <label for="register-apellido">Apellidos</label>
+              <div class="campo-input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" id="register-apellido" placeholder="Tus apellidos" />
+              </div>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="register-email">Correo electrónico *</label>
+            <div class="campo-input">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="email" id="register-email" placeholder="tu@email.com" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="register-telefono">Teléfono</label>
+            <div class="campo-input">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <input type="tel" id="register-telefono" placeholder="+34 600 000 000" />
+            </div>
+          </div>
+
+          <div class="campos-fila">
+            <div class="campo">
+              <label for="register-direccion">Dirección</label>
+              <div class="campo-input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <input type="text" id="register-direccion" placeholder="Tu dirección" />
+              </div>
+            </div>
+            <div class="campo">
+              <label for="register-ciudad">Ciudad</label>
+              <div class="campo-input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M9 8h1M9 12h1M9 16h1M14 8h1M14 12h1M14 16h1M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+                <input type="text" id="register-ciudad" placeholder="Tu ciudad" />
+              </div>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="register-codigo-postal">Código Postal</label>
+            <div class="campo-input">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              <input type="text" id="register-codigo-postal" placeholder="00000" />
+            </div>
+          </div>
+
+          <div class="campos-fila">
+            <div class="campo">
+              <label for="register-password">Contraseña *</label>
+              <div class="campo-input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="register-password" placeholder="Mín. 6 caracteres" required minlength="6" autocomplete="new-password" />
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility(this)" aria-label="Mostrar contraseña">
+                  <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="campo">
+              <label for="register-confirm-password">Confirmar *</label>
+              <div class="campo-input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input type="password" id="register-confirm-password" placeholder="Repite contraseña" required minlength="6" autocomplete="new-password" />
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility(this)" aria-label="Mostrar contraseña">
+                  <svg class="eye-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <svg class="eye-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="password-strength" id="password-strength" style="display:none;">
+            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+            <span class="strength-text" id="strength-text"></span>
+          </div>
+
+          <button type="submit" class="btn-cuenta" id="btn-register">
+            <span class="btn-texto">Crear mi cuenta</span>
+            <span class="btn-loading" style="display:none;">
+              <svg class="spinner" width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="31.4" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" dur="0.8s" from="0 12 12" to="360 12 12" repeatCount="indefinite"/></circle></svg>
+              Creando cuenta...
+            </span>
+          </button>
+
+          <div id="register-error" class="mensaje-error" style="display:none;"></div>
+          <div id="register-success" class="mensaje-exito" style="display:none;"></div>
+
+          <p class="cuenta-cambio">¿Ya tienes cuenta? <a href="/cuenta">Inicia sesión</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script is:inline>
+    // Toggle password visibility
+    function togglePasswordVisibility(btn) {
+      const input = btn.parentElement.querySelector('input');
+      const eyeOpen = btn.querySelector('.eye-open');
+      const eyeClosed = btn.querySelector('.eye-closed');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = 'block';
+      } else {
+        input.type = 'password';
+        eyeOpen.style.display = 'block';
+        eyeClosed.style.display = 'none';
+      }
+    }
+
+    // Password strength meter
+    const regPass = document.getElementById('register-password');
+    if (regPass) {
+      regPass.addEventListener('input', function() {
+        const str = document.getElementById('password-strength');
+        const fill = document.getElementById('strength-fill');
+        const text = document.getElementById('strength-text');
+        const val = this.value;
+        
+        if (!val) { str.style.display = 'none'; return; }
+        str.style.display = 'flex';
+        
+        let score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        
+        const levels = [
+          { width: '20%', color: '#e74c3c', label: 'Muy débil' },
+          { width: '40%', color: '#e67e22', label: 'Débil' },
+          { width: '60%', color: '#f1c40f', label: 'Aceptable' },
+          { width: '80%', color: '#27ae60', label: 'Fuerte' },
+          { width: '100%', color: '#2ecc71', label: 'Muy fuerte' }
+        ];
+        
+        const level = levels[Math.min(score, 4)];
+        fill.style.width = level.width;
+        fill.style.background = level.color;
+        text.textContent = level.label;
+        text.style.color = level.color;
+      });
+    }
+
+    // If user is already logged in, redirect to home
+    function checkIfLoggedIn() {
+      const saved = localStorage.getItem('currentUser');
+      if (saved) {
+        try {
+          const user = JSON.parse(saved);
+          if (user && user.id) {
+            window.location.href = '/';
+          }
+        } catch(e) {}
+      }
+    }
+    checkIfLoggedIn();
+  </script>
+</PublicLayout>
